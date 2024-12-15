@@ -58,67 +58,85 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# App Title
-st.title("🌟 Future Water Use Estimator by Hannah and Samuel 🌟")
-st.subheader("💦 Empowering smarter water management 💦")
+# Tabs for Navigation
+tabs = st.tabs(["💧 Prediction", "📘 About"])
 
-# Split layout for inputs
-st.markdown("---")
-st.markdown("### **Input Features**")
+# Tab 1: Prediction
+with tabs[0]:
+    st.title("🌟 Future Water Use Estimator by Hannah and Samuel 🌟")
+    st.subheader("💦 Empowering smarter water management 💦")
 
-col1, col2 = st.columns(2)
-with col1:
-    wat_bas_r = st.number_input("🌱 Basic Rural Water Access (%)", min_value=0.0, max_value=100.0, value=50.0, step=0.1)
-    wat_bas_u = st.number_input("🏠 Basic Urban Water Access (%)", min_value=0.0, max_value=100.0, value=70.0, step=0.1)
-    wat_lim_n = st.number_input("🚿 Limited National Water Access (%)", min_value=0.0, max_value=100.0, value=5.0, step=0.1)
+    # Split layout for inputs
+    st.markdown("---")
+    st.markdown("### **Input Features**")
 
-with col2:
-    wat_unimp_n = st.number_input("🪠 Unimproved National Water Access (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
-    wat_unimp_r = st.number_input("🌾 Unimproved Rural Water Access (%)", min_value=0.0, max_value=100.0, value=20.0, step=0.1)
+    col1, col2 = st.columns(2)
+    with col1:
+        wat_bas_r = st.number_input("🌱 Basic Rural Water Access (%)", min_value=0.0, max_value=100.0, value=50.0, step=0.1)
+        wat_bas_u = st.number_input("🏠 Basic Urban Water Access (%)", min_value=0.0, max_value=100.0, value=70.0, step=0.1)
+        wat_lim_n = st.number_input("🚿 Limited National Water Access (%)", min_value=0.0, max_value=100.0, value=5.0, step=0.1)
 
-# Prepare input for prediction
-input_data = np.array([[wat_bas_r, wat_unimp_n, wat_bas_u, wat_lim_n, wat_unimp_r]])
+    with col2:
+        wat_unimp_n = st.number_input("🪠 Unimproved National Water Access (%)", min_value=0.0, max_value=100.0, value=10.0, step=0.1)
+        wat_unimp_r = st.number_input("🌾 Unimproved Rural Water Access (%)", min_value=0.0, max_value=100.0, value=20.0, step=0.1)
 
-# Prediction
-st.markdown("---")
-if st.button("🔮 Predict Future Water Use"):
-    try:
-        prediction = model.predict(input_data)
-        st.success(f"🌟 🌟 Predicted Future Water Use: {prediction[0]:.2f} units")
-        st.markdown(
-            f"""
-            ### What Does This Mean?
-            The **Future Water Use** refers to the estimated amount of water resources (in specific units) 
-            that will be required by the population in the future, based on the provided access metrics.
+    # Prepare input for prediction
+    input_data = np.array([[wat_bas_r, wat_unimp_n, wat_bas_u, wat_lim_n, wat_unimp_r]])
 
-            #### Explanation:
-            - **Predicted Value:** {prediction[0]:.2f} units represent the expected water demand or usage. 
-            This value helps identify water needs for basic rural and urban water access, limited access, and unimproved access across national and rural areas. 
-            - For example, if the predicted value is 68.03 units, it indicates that approximately 68 units of water resources will be needed to meet population demands, considering the current access metrics you have entered.
+    # Prediction
+    st.markdown("---")
+    if st.button("🔮 Predict Future Water Use"):
+        try:
+            prediction = model.predict(input_data)
+            st.success(f"🌟 🌟 Predicted Future Water Use: {prediction[0]:.2f} units")
+            st.markdown(
+                f"""
+                ### What Does This Mean?
+                The **Future Water Use** refers to the estimated amount of water resources (in specific units) 
+                that will be required by the population in the future, based on the provided access metrics.
 
-            #### Why Is This Important?
-            Understanding future water use is crucial for:
-            - **Planning:** Helps policymakers allocate resources for sustainable water management.
-            - **Sustainability:** Supports identifying areas needing immediate intervention.
-            - **Research:** Provides data for future projections and water infrastructure development.
-            """)
-        if prediction[0] > 100:
-            st.warning("⚠️ The predicted value is quite high, indicating potential water scarcity.")
-        elif prediction[0] < 30:
-            st.info("💧 The predicted water use is low, suggesting efficient water management.")
+                #### Explanation:
+                - **Predicted Value:** {prediction[0]:.2f} units represent the expected water demand or usage. 
+                This value helps identify water needs for basic rural and urban water access, limited access, and unimproved access across national and rural areas. 
+                - For example, if the predicted value is 68.03 units, it indicates that approximately 68 units of water resources will be needed to meet population demands, considering the current access metrics you have entered.
 
-    except Exception as e:
-        st.error(f"Error during prediction: {e}")
+                #### Why Is This Important?
+                Understanding future water use is crucial for:
+                - **Planning:** Helps policymakers allocate resources for sustainable water management.
+                - **Sustainability:** Supports identifying areas needing immediate intervention.
+                - **Research:** Provides data for future projections and water infrastructure development.
+                """)
+            if prediction[0] > 100:
+                st.warning("⚠️ The predicted value is quite high, indicating potential water scarcity.")
+            elif prediction[0] < 30:
+                st.info("💧 The predicted water use is low, suggesting efficient water management.")
 
-# Footer
-st.markdown(
-    """
-    <div class="footer">
-        <p><strong>About This App</strong></p>
-        <p>This app predicts the estimated future water usage based on provided water access metrics, helping communities 
-        and policymakers plan for sustainable water management.</p>
-        <p>Learn more about global water management initiatives on <a href="https://www.unwater.org" target="_blank">UN Water</a>.</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+        except Exception as e:
+            st.error(f"Error during prediction: {e}")
+
+# Tab 2: About
+with tabs[1]:
+    st.title("📘 About This App")
+    st.markdown(
+        """
+        ### What Does This App Do?
+        This app predicts the estimated future water usage based on provided water access metrics, helping communities 
+        and policymakers plan for sustainable water management.
+
+        ### How It Works:
+        1. Users input key metrics related to water access in rural and urban areas.
+        2. The app calculates **future water usage** using a trained machine learning model.
+        3. Results include the expected water demand, along with a detailed explanation of its implications.
+
+        ### Use Case:
+        - **Policymakers:** Allocate resources for water infrastructure.
+        - **Researchers:** Analyze water accessibility trends.
+        - **Communities:** Understand water needs for sustainable living.
+
+        #### Developed By:
+        - Hannah and Samuel 💧
+
+        Thank you for using the **Future Water Use Estimator**!
+        """,
+        unsafe_allow_html=True,
+    )
